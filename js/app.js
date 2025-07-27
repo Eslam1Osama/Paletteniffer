@@ -3,6 +3,56 @@
 
 const preloaderMinTime = 1200;
 
+// Suppress React inspector errors at the global level
+(function() {
+  const originalConsoleError = console.error;
+  const originalConsoleWarn = console.warn;
+  
+  console.error = function(...args) {
+    const message = args.join(' ');
+    if (message.includes('Minified React error') || 
+        message.includes('inspector.b9415ea5.js') ||
+        message.includes('React error #130') ||
+        message.includes('React DevTools')) {
+      return; // Suppress React inspector errors
+    }
+    originalConsoleError.apply(console, args);
+  };
+  
+  console.warn = function(...args) {
+    const message = args.join(' ');
+    if (message.includes('Minified React error') || 
+        message.includes('inspector.b9415ea5.js') ||
+        message.includes('React error #130') ||
+        message.includes('React DevTools')) {
+      return; // Suppress React inspector warnings
+    }
+    originalConsoleWarn.apply(console, args);
+  };
+  
+  // Global error handler to catch React inspector errors
+  window.addEventListener('error', function(event) {
+    if (event.error && event.error.message && 
+        (event.error.message.includes('Minified React error') ||
+         event.error.message.includes('inspector.b9415ea5.js') ||
+         event.error.message.includes('React error #130'))) {
+      event.preventDefault();
+      return false;
+    }
+  });
+  
+  // Global unhandled rejection handler
+  window.addEventListener('unhandledrejection', function(event) {
+    if (event.reason && event.reason.message && 
+        (event.reason.message.includes('Minified React error') ||
+         event.reason.message.includes('inspector.b9415ea5.js') ||
+         event.reason.message.includes('React error #130'))) {
+      event.preventDefault();
+      return false;
+    }
+  });
+})();
+
 class ColorPaletteExtractorApp {
   constructor() {
     this.uiManager = null;
@@ -101,10 +151,25 @@ class ColorPaletteExtractorApp {
   }
 
   setupErrorHandling() {
+    // Suppress React inspector errors completely
+    const originalConsoleError = console.error;
+    console.error = function(...args) {
+      const message = args.join(' ');
+      if (message.includes('Minified React error') || 
+          message.includes('inspector.b9415ea5.js') ||
+          message.includes('React error #130')) {
+        return; // Suppress React inspector errors
+      }
+      originalConsoleError.apply(console, args);
+    };
+
     // Global error handler
     window.addEventListener('error', (event) => {
       // Ignore React inspector errors
-      if (event.error && event.error.message && event.error.message.includes('Minified React error')) {
+      if (event.error && event.error.message && 
+          (event.error.message.includes('Minified React error') ||
+           event.error.message.includes('inspector.b9415ea5.js'))) {
+        event.preventDefault();
         return;
       }
       
@@ -117,7 +182,9 @@ class ColorPaletteExtractorApp {
     // Unhandled promise rejection handler
     window.addEventListener('unhandledrejection', (event) => {
       // Ignore React inspector errors
-      if (event.reason && event.reason.message && event.reason.message.includes('Minified React error')) {
+      if (event.reason && event.reason.message && 
+          (event.reason.message.includes('Minified React error') ||
+           event.reason.message.includes('inspector.b9415ea5.js'))) {
         event.preventDefault();
         return;
       }
