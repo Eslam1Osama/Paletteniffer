@@ -137,10 +137,6 @@ paletteniffer/
 - **Design Tokens** - Ready for design systems
 - **Offline Collaboration** - Work without internet connection
 
-## 🤝 **Contributing**
-
-We welcome contributions from the community! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
 ## 🚫 License
 
 This code is licensed under a **Proprietary License**.
