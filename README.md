@@ -3,8 +3,8 @@
 > **Enterprise-Grade Color Palette Extractor with Advanced AI-Powered Analysis**
 
 [![License: Proprietary](https://img.shields.io/badge/license-Proprietary-red.svg)](#license)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/yourusername/paletteniffer)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yourusername/paletteniffer)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://paletteniffer.vercel.app/)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://paletteniffer.vercel.app/)
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-brightgreen.svg)](https://web.dev/progressive-web-apps/)
 [![WCAG AA](https://img.shields.io/badge/WCAG-AA%20Compliant-green.svg)](https://www.w3.org/WAI/WCAG2AA-Conformance)
 
