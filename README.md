@@ -2,7 +2,7 @@
 
 > **Enterprise-Grade Color Palette Extractor with Advanced AI-Powered Analysis**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Proprietary](https://img.shields.io/badge/license-Proprietary-red.svg)](#license)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/yourusername/paletteniffer)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yourusername/paletteniffer)
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-brightgreen.svg)](https://web.dev/progressive-web-apps/)
@@ -141,9 +141,19 @@ paletteniffer/
 
 We welcome contributions from the community! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
-## 📄 **License**
+## 🚫 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This code is licensed under a **Proprietary License**.
+
+- **All rights reserved** by **EasOfTopia Technologies**.
+- You are **not permitted** to use, copy, modify, distribute, or sell any part of this project.
+- This repository is intended for internal/company use only.
+
+## 🏢 Ownership
+
+This software is the exclusive property of **EasOfTopia Technologies**.  
+Any attempt to reverse-engineer, reuse, or distribute the contents of this repository without prior written consent is strictly prohibited and may result in legal action.
+
 
 ## 🙏 **Acknowledgments**
 
@@ -153,6 +163,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Design Community** - For feedback and feature requests
 ---
 
-**Built with ❤️ by the EasOfTopia Team**
+**Built with ❤️ by the EasOfTopia (Paletteniffer) Team**
 
 *Paletteniffer - Where Colors Come to Life* 
