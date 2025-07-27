@@ -1,4 +1,4 @@
-# 🎨 Paletteniffer
+# Paletteniffer
 
 > **Enterprise-Grade Color Palette Extractor with Advanced AI-Powered Analysis**
 
