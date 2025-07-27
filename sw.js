@@ -72,14 +72,6 @@ self.addEventListener('fetch', event => {
     return;
   }
   
-  // Skip unsupported schemes
-  if (request.url.startsWith('chrome-extension://') || 
-      request.url.startsWith('chrome://') || 
-      request.url.startsWith('moz-extension://') ||
-      request.url.startsWith('edge://')) {
-    return;
-  }
-  
   // Handle different types of requests
   if (request.destination === 'image') {
     // Images: Cache first, then network
@@ -99,14 +91,6 @@ self.addEventListener('fetch', event => {
 // Handle image requests (cache first)
 async function handleImageRequest(request) {
   try {
-    // Skip chrome-extension and other unsupported schemes
-    if (request.url.startsWith('chrome-extension://') || 
-        request.url.startsWith('chrome://') || 
-        request.url.startsWith('moz-extension://') ||
-        request.url.startsWith('edge://')) {
-      return fetch(request);
-    }
-    
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
       return cachedResponse;
@@ -127,14 +111,6 @@ async function handleImageRequest(request) {
 // Handle static file requests (cache first)
 async function handleStaticRequest(request) {
   try {
-    // Skip chrome-extension and other unsupported schemes
-    if (request.url.startsWith('chrome-extension://') || 
-        request.url.startsWith('chrome://') || 
-        request.url.startsWith('moz-extension://') ||
-        request.url.startsWith('edge://')) {
-      return fetch(request);
-    }
-    
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
       // Update cache in background
@@ -163,14 +139,6 @@ async function handleStaticRequest(request) {
 // Handle same-origin requests (network first)
 async function handleSameOriginRequest(request) {
   try {
-    // Skip chrome-extension and other unsupported schemes
-    if (request.url.startsWith('chrome-extension://') || 
-        request.url.startsWith('chrome://') || 
-        request.url.startsWith('moz-extension://') ||
-        request.url.startsWith('edge://')) {
-      return fetch(request);
-    }
-    
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
       const cache = await caches.open(DYNAMIC_CACHE);
@@ -198,14 +166,6 @@ async function handleSameOriginRequest(request) {
 // Handle external requests (network only)
 async function handleExternalRequest(request) {
   try {
-    // Skip chrome-extension and other unsupported schemes
-    if (request.url.startsWith('chrome-extension://') || 
-        request.url.startsWith('chrome://') || 
-        request.url.startsWith('moz-extension://') ||
-        request.url.startsWith('edge://')) {
-      return fetch(request);
-    }
-    
     return await fetch(request);
   } catch (error) {
     console.error('Service Worker: External fetch failed', error);

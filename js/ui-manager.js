@@ -146,6 +146,18 @@ class UIManager {
     try { savedTheme = JSON.parse(savedTheme); } catch (e) {}
     if (!savedTheme) savedTheme = 'light';
     this.setTheme(savedTheme);
+    
+    // Ensure logo is visible
+    this.ensureLogoVisibility();
+  }
+  
+  ensureLogoVisibility() {
+    const logoImages = document.querySelectorAll('.logo-img');
+    logoImages.forEach(img => {
+      if (img.complete && img.naturalHeight === 0) {
+        console.warn('Logo image failed to load:', img.src);
+      }
+    });
   }
 
   toggleTheme() {
@@ -156,9 +168,21 @@ class UIManager {
 
   setTheme(theme) {
     document.body.dataset.theme = theme;
+    
+    // Apply theme to body classes for cross-app compatibility
+    if (theme === 'dark') {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+    
+    // Save to localStorage for cross-app persistence
     try {
       localStorage.setItem('theme', JSON.stringify(theme));
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Failed to save theme to localStorage:', e);
+    }
+    
     // Sync preloader if visible
     if (document.getElementById('platform-preloader')) {
       if (theme === 'dark') {
@@ -181,6 +205,11 @@ class UIManager {
       moonIcon.classList.remove('active');
       sunIcon.classList.add('active');
     }
+    
+    // Dispatch custom event for other components to listen
+    window.dispatchEvent(new CustomEvent('themeChanged', { 
+      detail: { theme: theme } 
+    }));
   }
 
   switchTab(tabName) {

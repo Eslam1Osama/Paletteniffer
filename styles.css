@@ -164,6 +164,9 @@ html, body {
   gap: var(--space-3);
   flex-shrink: 0;
   min-width: 0;
+  /* Ensure logo is visible */
+  position: relative;
+  z-index: 10;
 }
 
 .logo-icon {
@@ -179,19 +182,19 @@ html, body {
 }
 
 .logo-img {
-  width: 64px;
-  height: 64px;
-  max-width: 80px;
-  max-height: 80px;
-  border-radius: var(--radius-xl);
+  width: 48px;
+  height: 48px;
+  max-width: 60px;
+  max-height: 60px;
+  border-radius: var(--radius-lg);
   object-fit: contain;
   background: transparent;
   box-shadow: none;
-  margin-right: var(--space-1);
+  margin-right: var(--space-2);
   display: block;
   transition: transform 0.18s;
   /* Visually zoom in the logo image */
-  transform: scale(1.18);
+  transform: scale(1.1);
 }
 .logo-img-light {
   display: block;
@@ -207,12 +210,14 @@ html, body {
 }
 
 .logo-text h1 {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   font-weight: 700;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .logo-text p {
@@ -1216,8 +1221,9 @@ html, body {
   }
   
   .logo-img {
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
+    transform: scale(1);
   }
   
   .header-actions {

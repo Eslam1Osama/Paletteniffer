@@ -29,14 +29,14 @@ class PlatformNavigationManager {
     }
 
     /**
-     * Initialize platform navigation
+     * Initialize platform navigation for EasOfTopia platform
      * @param {Object} options - Configuration options
      */
     init(options = {}) {
         if (this.isInitialized) return;
         
         this.config = {
-            insertAfter: options.insertAfter || '.nav-right',
+            insertAfter: options.insertAfter || '.header-actions',
             showCurrentApp: options.showCurrentApp !== false,
             enableDropdown: options.enableDropdown !== false,
             ...options
@@ -48,7 +48,7 @@ class PlatformNavigationManager {
         this.setupResponsiveBehavior();
         
         this.isInitialized = true;
-        console.log('Platform Navigation initialized successfully');
+        console.log('EasOfTopia Platform Navigation initialized successfully');
     }
 
     /**
