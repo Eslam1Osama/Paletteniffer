@@ -91,6 +91,13 @@ self.addEventListener('fetch', event => {
 // Handle image requests (cache first)
 async function handleImageRequest(request) {
   try {
+    // Skip chrome-extension and other unsupported schemes
+    if (request.url.startsWith('chrome-extension://') || 
+        request.url.startsWith('moz-extension://') || 
+        request.url.startsWith('safari-extension://')) {
+      return fetch(request);
+    }
+    
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
       return cachedResponse;
@@ -111,6 +118,13 @@ async function handleImageRequest(request) {
 // Handle static file requests (cache first)
 async function handleStaticRequest(request) {
   try {
+    // Skip chrome-extension and other unsupported schemes
+    if (request.url.startsWith('chrome-extension://') || 
+        request.url.startsWith('moz-extension://') || 
+        request.url.startsWith('safari-extension://')) {
+      return fetch(request);
+    }
+    
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
       // Update cache in background
@@ -139,6 +153,13 @@ async function handleStaticRequest(request) {
 // Handle same-origin requests (network first)
 async function handleSameOriginRequest(request) {
   try {
+    // Skip chrome-extension and other unsupported schemes
+    if (request.url.startsWith('chrome-extension://') || 
+        request.url.startsWith('moz-extension://') || 
+        request.url.startsWith('safari-extension://')) {
+      return fetch(request);
+    }
+    
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
       const cache = await caches.open(DYNAMIC_CACHE);
@@ -155,7 +176,7 @@ async function handleSameOriginRequest(request) {
     }
     
     // Return offline page for HTML requests
-    if (request.headers.get('accept').includes('text/html')) {
+    if (request.headers.get('accept') && request.headers.get('accept').includes('text/html')) {
       return caches.match('/offline.html');
     }
     

@@ -89,6 +89,7 @@ class ColorPaletteExtractorApp {
         
       } catch (error) {
         console.log('Service Worker registration failed:', error);
+        // Don't show error to user for service worker issues
       }
     }
   }
@@ -102,6 +103,11 @@ class ColorPaletteExtractorApp {
   setupErrorHandling() {
     // Global error handler
     window.addEventListener('error', (event) => {
+      // Ignore React inspector errors
+      if (event.error && event.error.message && event.error.message.includes('Minified React error')) {
+        return;
+      }
+      
       console.error('Global error:', event.error);
       if (this.uiManager) {
         this.uiManager.showToast('An unexpected error occurred. Please try again.', 'error');
@@ -110,6 +116,12 @@ class ColorPaletteExtractorApp {
 
     // Unhandled promise rejection handler
     window.addEventListener('unhandledrejection', (event) => {
+      // Ignore React inspector errors
+      if (event.reason && event.reason.message && event.reason.message.includes('Minified React error')) {
+        event.preventDefault();
+        return;
+      }
+      
       console.error('Unhandled promise rejection:', event.reason);
       if (this.uiManager) {
         this.uiManager.showToast('An unexpected error occurred. Please try again.', 'error');
