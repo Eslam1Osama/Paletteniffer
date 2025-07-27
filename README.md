@@ -101,7 +101,7 @@ paletteniffer/
 2. Enter website URL (e.g., `https://example.com`)
 3. View extracted brand colors and design patterns
 4. Export for development integration
-```
+
 
 ## 🎯 **Performance Metrics**
 
