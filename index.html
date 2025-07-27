@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paletteniffer - Enterprise Color Palette Extractor</title>
+    <meta name="description" content="Enterprise-grade color palette extraction tool with advanced AI-powered analysis. Extract, analyze, and export color palettes from images and websites with professional accuracy and accessibility compliance.">
+    <meta name="keywords" content="color palette, color extractor, design tools, web design, color analysis, accessibility, WCAG, color psychology, brand colors, design system, CSS variables, Tailwind, Adobe ASE">
+    <meta name="author" content="Paletteniffer Pro">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://paletteniffer.vercel.app/">
+    <meta property="og:title" content="Paletteniffer - Enterprise Color Palette Extractor">
+    <meta property="og:description" content="Extract, analyze, and export color palettes from images and websites with enterprise-level accuracy and accessibility compliance. Perfect for designers and developers.">
+    <meta property="og:image" content="https://paletteniffer.vercel.app/assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Paletteniffer">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://paletteniffer.vercel.app/">
+    <meta property="twitter:title" content="Paletteniffer - Enterprise Color Palette Extractor">
+    <meta property="twitter:description" content="Extract, analyze, and export color palettes from images and websites with enterprise-level accuracy and accessibility compliance.">
+    <meta property="twitter:image" content="https://paletteniffer.vercel.app/assets/twitter-image.png">
+    <meta property="twitter:site" content="@paletteniffer">
+    <meta property="twitter:creator" content="@paletteniffer">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#38bdf8">
+    <meta name="msapplication-TileColor" content="#38bdf8">
+    <meta name="msapplication-config" content="browserconfig.xml">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="assets/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="assets/icon-152x152.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="platformPreloader.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/platformNavigation.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Platform Preloader -->
+    <div id="platform-preloader" class="platform-preloader" role="status" aria-busy="true">
+      <div class="preloader-logo">
+        <svg class="preloader-blocks" width="64" height="64" viewBox="0 0 64 64">
+          <rect class="block block1" x="4"  y="4"  width="16" height="16" rx="4"/>
+          <rect class="block block2" x="24" y="4"  width="16" height="16" rx="4"/>
+          <rect class="block block3" x="44" y="4"  width="16" height="16" rx="4"/>
+          <rect class="block block4" x="4"  y="24" width="16" height="16" rx="4"/>
+          <rect class="block block5" x="24" y="24" width="16" height="16" rx="4"/>
+          <rect class="block block6" x="44" y="24" width="16" height="16" rx="4"/>
+          <rect class="block block7" x="4"  y="44" width="16" height="16" rx="4"/>
+          <rect class="block block8" x="24" y="44" width="16" height="16" rx="4"/>
+          <rect class="block block9" x="44" y="44" width="16" height="16" rx="4"/>
+        </svg>
+        <span class="preloader-title">EasOfTopia</span>
+      </div>
+    </div>
+    <script src="platformPreloader.js"></script>
+    <div class="main-content">
+        <div class="app" id="app">
+            <!-- Header -->
+            <header class="header">
+                <div class="container">
+                    <div class="header-content">
+                        <div class="logo">
+                            <img src="assets/logo_light.png" alt="Paletteniffer logo" class="logo-img logo-img-light" />
+                            <img src="assets/logo_dark.png" alt="Paletteniffer logo" class="logo-img logo-img-dark" />
+                            <div class="logo-text">
+                                <h1 class="app-title">Paletteniffer</h1>
+                            </div>
+                        </div>
+                        <div class="header-actions">
+                            <div class="export-dropdown" id="exportDropdownContainer" style="display: none;">
+                                <button id="exportBtn" class="btn btn-secondary export-toggle" aria-haspopup="listbox" aria-expanded="false">
+                                    <i class="fas fa-download"></i>
+                                    Export
+                                    <i class="fas fa-caret-down"></i>
+                                </button>
+                                <ul class="export-menu" id="exportMenu" role="listbox" tabindex="-1" aria-label="Export as" style="display: none;">
+                                    <li><button class="export-option" data-type="json" role="option">JSON</button></li>
+                                    <li><button class="export-option" data-type="css" role="option">CSS</button></li>
+                                    <li><button class="export-option" data-type="svg" role="option">SVG</button></li>
+                                    <li><button class="export-option" data-type="png" role="option">PNG</button></li>
+                                    <li><button class="export-option" data-type="ase" role="option">ASE</button></li>
+                                </ul>
+                            </div>
+                            <button id="themeToggle" class="btn btn-icon" style="position: relative;">
+                                <span class="theme-icon theme-icon-sun active" aria-hidden="true">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="5"/>
+                                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                                    </svg>
+                                </span>
+                                <span class="theme-icon theme-icon-moon" aria-hidden="true">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main">
+                <div class="container">
+                    <!-- Input Section -->
+                    <div class="input-card">
+                        <div class="tabs">
+                            <button class="tab-btn active" data-tab="image">
+                                <i class="fas fa-upload"></i>
+                                Upload Image
+                            </button>
+                            <button class="tab-btn" data-tab="url">
+                                <i class="fas fa-link"></i>
+                                Analyze Website
+                            </button>
+                        </div>
+
+                        <div class="tab-content">
+                            <!-- Image Upload Tab -->
+                            <div class="tab-pane active" id="image-tab">
+                                <div class="upload-area" id="uploadArea">
+                                    <input type="file" id="fileInput" accept="image/*" hidden>
+                                    <div class="upload-content">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <h3>Click to upload an image</h3>
+                                        <p>Supports PNG, JPG, and WebP formats</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- URL Analysis Tab -->
+                            <div class="tab-pane" id="url-tab">
+                                <div class="url-input-group">
+                                    <input type="url" id="urlInput" placeholder="https://example.com" class="url-input">
+                                    <button id="analyzeBtn" class="btn btn-primary">
+                                        <i class="fas fa-eye"></i>
+                                        Analyze
+                                    </button>
+                                </div>
+                                <div class="url-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <p>Enter a website URL to extract its color palette. Note: Some websites may not be accessible due to CORS restrictions.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="loading-card" id="loadingCard" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        <h3>Extracting colors...</h3>
+                        <p>This may take a few seconds</p>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div class="results-section" id="resultsSection" style="display: none;">
+                        <!-- Image Preview -->
+                        <div class="preview-card" id="previewCard" style="display: none;">
+                            <h3>Uploaded Image</h3>
+                            <div class="image-preview">
+                                <img id="previewImage" alt="Uploaded image">
+                            </div>
+                        </div>
+
+                        <!-- Color Palette -->
+                        <div class="palette-card" aria-labelledby="paletteTitle">
+                            <div class="palette-toolbar" role="toolbar" aria-label="Palette Actions">
+                                <div class="format-toggle" role="radiogroup" aria-label="Color Format">
+                                    <button class="format-btn" data-format="hex" aria-checked="true" role="radio">HEX</button>
+                                    <button class="format-btn" data-format="rgb" aria-checked="false" role="radio">RGB</button>
+                                    <button class="format-btn" data-format="hsl" aria-checked="false" role="radio">HSL</button>
+                                </div>
+                                <div class="palette-actions">
+                                    <button class="btn btn-secondary" id="copyAllBtn" aria-label="Copy all colors">Copy All</button>
+                                    <button class="btn btn-secondary" id="showCodeBtn" aria-label="Show code snippets">Show Code</button>
+                                </div>
+                            </div>
+                            <hr class="palette-divider" aria-hidden="true" />
+                            <h3 id="paletteTitle" class="palette-title">Extracted Color Palette</h3>
+                            <div class="color-categories" aria-label="Color Categories">
+                                <div class="color-category" id="dominantColors">
+                                    <h4>Dominant Colors</h4>
+                                    <div class="color-swatches"></div>
+                                </div>
+                                <div class="color-category" id="secondaryColors">
+                                    <h4>Secondary Colors</h4>
+                                    <div class="color-swatches"></div>
+                                </div>
+                                <div class="color-category" id="accentColors">
+                                    <h4>Accent Colors</h4>
+                                    <div class="color-swatches"></div>
+                                </div>
+                            </div>
+                            <!-- All Extracted Colors Section (Integrated) -->
+                            <div class="color-category" id="allColors">
+                                <h3 style="margin-bottom:1.2em;">All Extracted Colors</h3>
+                                <div class="color-swatches"></div>
+                            </div>
+                            <div id="paletteCodeBlock" class="palette-code-block" style="display:none;" aria-live="polite"></div>
+                            <!-- Usage Tips -->
+                            <div class="usage-tips">
+                                <h5><i class="fas fa-lightbulb"></i> Usage Tips</h5>
+                                <ul>
+                                    <li>Click any color to copy it to your clipboard</li>
+                                    <li>Hover over colors to see detailed information and WCAG compliance</li>
+                                    <li>Use the Export button to save your palette as JSON, CSS, SVG, PNG, or ASE</li>
+                                    <li>AA/AAA badges indicate text accessibility compliance</li>
+                                    <li>Use the format toggle and code snippets for easy developer integration</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Toast Notifications -->
+            <div class="toast-container" id="toastContainer"></div>
+
+            <!-- Color Tooltip -->
+            <div class="color-tooltip" id="colorTooltip" style="display: none;">
+                <div class="tooltip-content">
+                    <div class="color-info">
+                        <div class="color-value hex"></div>
+                        <div class="color-value rgb"></div>
+                        <div class="color-value hsl"></div>
+                    </div>
+                    <div class="color-meta">
+                        <span class="wcag-badge"></span>
+                        <span class="frequency"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <canvas id="hiddenCanvas" style="display: none;"></canvas>
+    </div>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/color-extractor.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/platformNavigation.js"></script>
+</body>
+</html>
