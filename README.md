@@ -151,17 +151,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **WCAG Guidelines** - Accessibility compliance standards
 - **Open Source Community** - For inspiration and collaboration
 - **Design Community** - For feedback and feature requests
-
-## 📞 **Support**
-
-- **Documentation**: [Wiki](https://github.com/yourusername/paletteniffer/wiki)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/paletteniffer/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/paletteniffer/discussions)
-- **Email**: support@paletteniffer.com
-- **PWA Support**: [PWA Documentation](https://web.dev/progressive-web-apps/)
-
 ---
 
-**Built with ❤️ for the design and development community**
+**Built with ❤️ by the EasOfTopia Team**
 
 *Paletteniffer - Where Colors Come to Life* 
