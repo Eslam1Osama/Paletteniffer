@@ -15,6 +15,7 @@ const STATIC_FILES = [
   '/assets/logo_light.png',
   '/assets/logo_dark.png',
   '/manifest.json',
+  '/offline.html',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
 
@@ -172,83 +173,15 @@ async function handleExternalRequest(request) {
   }
 }
 
-// Background sync for offline actions
-self.addEventListener('sync', event => {
-  console.log('Service Worker: Background sync triggered', event.tag);
-  
-  if (event.tag === 'background-sync') {
-    event.waitUntil(performBackgroundSync());
-  }
-});
 
-// Perform background sync tasks
-async function performBackgroundSync() {
-  try {
-    // Sync any pending data when connection is restored
-    console.log('Service Worker: Performing background sync');
-    
-    // You can add specific sync logic here
-    // For example, syncing user preferences, cached palettes, etc.
-    
-  } catch (error) {
-    console.error('Service Worker: Background sync failed', error);
-  }
-}
 
-// Push notification handling
-self.addEventListener('push', event => {
-  console.log('Service Worker: Push notification received');
-  
-  const options = {
-    body: event.data ? event.data.text() : 'New update available!',
-    icon: '/assets/icon-192x192.png',
-    badge: '/assets/badge-72x72.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    },
-    actions: [
-      {
-        action: 'explore',
-        title: 'Open App',
-        icon: '/assets/icon-96x96.png'
-      },
-      {
-        action: 'close',
-        title: 'Close',
-        icon: '/assets/icon-96x96.png'
-      }
-    ]
-  };
-  
-      event.waitUntil(
-      self.registration.showNotification('Paletteniffer', options)
-    );
-});
 
-// Notification click handling
-self.addEventListener('notificationclick', event => {
-  console.log('Service Worker: Notification clicked', event);
-  
-  event.notification.close();
-  
-  if (event.action === 'explore') {
-    event.waitUntil(
-      clients.openWindow('/')
-    );
-  }
-});
+
+
 
 // Message handling for communication with main thread
 self.addEventListener('message', event => {
-  console.log('Service Worker: Message received', event.data);
-  
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
-  }
-  
-  if (event.data && event.data.type === 'GET_VERSION') {
-    event.ports[0].postMessage({ version: CACHE_NAME });
   }
 }); 

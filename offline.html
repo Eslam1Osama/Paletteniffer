@@ -68,40 +68,7 @@
             margin-bottom: 2rem;
         }
         
-        .offline-features {
-            background: #f8fafc;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            text-align: left;
-        }
-        
-        .offline-features h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-        }
-        
-        .offline-features ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .offline-features li {
-            padding: 0.5rem 0;
-            color: #64748b;
-            position: relative;
-            padding-left: 1.5rem;
-        }
-        
-        .offline-features li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: var(--success-color);
-            font-weight: bold;
-        }
+
         
         .retry-button {
             background: var(--primary-color);
@@ -124,11 +91,7 @@
             transform: translateY(0);
         }
         
-        .cache-info {
-            font-size: 0.875rem;
-            color: #94a3b8;
-            margin-top: 1rem;
-        }
+
         
         @media (max-width: 640px) {
             .offline-container {
@@ -156,23 +119,13 @@
             Don't worry! Paletteniffer works offline for previously analyzed images and cached data.
         </p>
         
-        <div class="offline-features">
-            <h3>Available Offline:</h3>
-            <ul>
-                <li>Previously analyzed color palettes</li>
-                <li>Cached images and results</li>
-                <li>Export functionality for saved palettes</li>
-                <li>App interface and navigation</li>
-            </ul>
-        </div>
+
         
         <button class="retry-button" onclick="window.location.reload()">
             Try Again
         </button>
         
-        <p class="cache-info">
-            Your data is safely cached and will sync when you're back online.
-        </p>
+
     </div>
     
     <script>

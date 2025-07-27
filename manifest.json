@@ -14,115 +14,13 @@
   "categories": ["design", "productivity", "utilities", "developer-tools"],
   "icons": [
     {
-      "src": "assets/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon-192x192.png",
+      "src": "assets/logo_light.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "assets/screenshot-desktop.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Paletteniffer Desktop Interface"
-    },
-    {
-      "src": "assets/screenshot-mobile.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Paletteniffer Mobile Interface"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Upload Image",
-      "short_name": "Upload",
-      "description": "Quickly upload and analyze an image",
-      "url": "/?tab=image",
-      "icons": [
-        {
-          "src": "assets/shortcut-upload.png",
-          "sizes": "96x96"
-        }
-      ]
-    },
-    {
-      "name": "Analyze Website",
-      "short_name": "Website",
-      "description": "Extract colors from a website URL",
-      "url": "/?tab=url",
-      "icons": [
-        {
-          "src": "assets/shortcut-website.png",
-          "sizes": "96x96"
-        }
-      ]
-    }
-  ],
-  "related_applications": [
-    {
-      "platform": "webapp",
-      "url": "https://eas-of-topia.vercel.app/",
-      "id": "eas-of-topia-hub"
-    }
-  ],
-  "prefer_related_applications": false,
-  "edge_side_panel": {
-    "preferred_width": 400
-  },
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  },
-  "handle_links": "preferred",
-  "protocol_handlers": [
-    {
-      "protocol": "web+paletteniffer",
-      "url": "/?url=%s"
+      "purpose": "any"
     }
   ]
+
+
+
 } 

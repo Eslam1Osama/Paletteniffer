@@ -2,19 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://paletteniffer.vercel.app/sitemap.xml
-
-# Crawl-delay for respectful crawling
-Crawl-delay: 1
-
-# Disallow admin or private areas (if any)
-Disallow: /admin/
-Disallow: /private/
-Disallow: /api/
-
-# Allow important resources
-Allow: /assets/
-Allow: /js/
-Allow: /css/
-Allow: /manifest.json
-Allow: /sw.js 
+Sitemap: https://paletteniffer.vercel.app/sitemap.xml 
