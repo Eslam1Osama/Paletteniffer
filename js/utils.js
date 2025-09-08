@@ -336,5 +336,5 @@ class Utils {
   }
 }
 
-// Export for use in other modules
-window.Utils = Utils;
+// Export for use in other modules (works in both window and worker contexts)
+(function(root){ root.Utils = Utils; })(typeof self !== 'undefined' ? self : window);

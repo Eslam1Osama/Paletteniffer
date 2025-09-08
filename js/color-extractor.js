@@ -92,6 +92,10 @@ class ColorExtractor {
       img.onload = () => {
         try {
           // Resize image for performance
+          // Ensure 2D context hints frequent readback to optimize getImageData cost
+          if (!this.ctx) {
+            this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
+          }
           Utils.resizeImage(this.canvas, this.ctx, img, 800);
 
           // Offload to Web Worker when available; fallback to main-thread extraction
@@ -1496,7 +1500,7 @@ class ColorExtractor {
   async extractColorsFromBlob(blob) {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
       const img = new Image();
 
       img.onload = () => {
