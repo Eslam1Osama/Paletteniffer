@@ -3,7 +3,7 @@
 > Production-grade color analysis and export for design and engineering teams.
 
 [![License: Commercial](https://img.shields.io/badge/license-Commercial-orange.svg)](#license)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://paletteniffer.vercel.app/)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://paletteniffer.vercel.app/)
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-brightgreen.svg)](https://web.dev/progressive-web-apps/)
 [![WCAG AA](https://img.shields.io/badge/WCAG-AA%20Compliant-green.svg)](https://www.w3.org/WAI/WCAG2AA-Conformance)
 
