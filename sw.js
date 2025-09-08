@@ -5,19 +5,37 @@ const DYNAMIC_CACHE = 'paletteniffer-dynamic-v1.0.0';
 
 // Files to cache immediately
 const STATIC_FILES = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/js/app.js',
-  '/js/ui-manager.js',
-  '/js/color-extractor.js',
-  '/js/utils.js',
-  '/assets/logo_light.png',
-  '/assets/logo_dark.png',
-  '/manifest.json',
-  '/offline.html',
+  // Use relative paths so hosting under subpaths works correctly
+  'index.html',
+  'styles.css',
+  'platformPreloader.css',
+  'css/platformNavigation.css',
+  'js/utils.js',
+  'js/logger.js',
+  'js/modal.js',
+  'js/config.js',
+  'js/color-extractor.js',
+  'js/ui-manager.js',
+  'js/app.js',
+  'js/platformNavigation.js',
+  'platformPreloader.js',
+  'assets/logo_light.png',
+  'assets/logo_dark.png',
+  'manifest.json',
+  'offline.html',
+  // External CDN asset (may fail to cache depending on CORS, safe to attempt)
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
+
+// Suppress verbose service worker logs in production
+// Keep errors for visibility; adjust by editing js/config.js logging if needed
+(function() {
+  const noop = function(){};
+  console.log = noop;
+  console.info = noop;
+  console.debug = noop;
+  console.warn = noop;
+})();
 
 // Install event - cache static files
 self.addEventListener('install', event => {
@@ -76,8 +94,14 @@ self.addEventListener('fetch', event => {
   if (request.destination === 'image') {
     // Images: Cache first, then network
     event.respondWith(handleImageRequest(request));
-  } else if (url.pathname.startsWith('/js/') || url.pathname.startsWith('/css/')) {
-    // JS/CSS: Cache first, then network
+  } else if (
+    // Scripts and styles should be treated as static even under subpath hosting
+    request.destination === 'script' ||
+    request.destination === 'style' ||
+    url.pathname.includes('/js/') ||
+    url.pathname.includes('/css/')
+  ) {
+    // JS/CSS: Cache first, then network (works for subpaths)
     event.respondWith(handleStaticRequest(request));
   } else if (url.origin === location.origin) {
     // Same-origin requests: Network first, then cache
@@ -175,9 +199,9 @@ async function handleSameOriginRequest(request) {
       return cachedResponse;
     }
     
-    // Return offline page for HTML requests
+    // Return offline page for HTML requests (relative path for subpath hosting)
     if (request.headers.get('accept') && request.headers.get('accept').includes('text/html')) {
-      return caches.match('/offline.html');
+      return caches.match('offline.html');
     }
     
     return new Response('Network error', { status: 503 });

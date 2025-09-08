@@ -55,6 +55,31 @@ class UIManager {
       showCodeBtn: document.getElementById('showCodeBtn'),
       paletteCodeBlock: document.getElementById('paletteCodeBlock')
     };
+
+    // Feature: hide URL analysis tab if external extraction is disabled and UI hiding enabled
+    try {
+      const shouldHideUrlTab = (
+        window.AppConfig &&
+        window.AppConfig.enableExternalUrlExtraction === false &&
+        window.AppConfig.hideUrlAnalysisTabWhenDisabled === true
+      );
+      if (shouldHideUrlTab) {
+        // Remove the URL tab button and pane from the DOM to avoid confusing users
+        const urlTabBtn = Array.from(this.elements.tabBtns).find(btn => btn.dataset.tab === 'url');
+        const urlTabPane = document.getElementById('url-tab');
+        if (urlTabBtn && urlTabBtn.parentNode) {
+          urlTabBtn.parentNode.removeChild(urlTabBtn);
+        }
+        if (urlTabPane && urlTabPane.parentNode) {
+          urlTabPane.parentNode.removeChild(urlTabPane);
+        }
+        // Refresh references to tab buttons/panes after removal
+        this.elements.tabBtns = document.querySelectorAll('.tab-btn');
+        this.elements.tabPanes = document.querySelectorAll('.tab-pane');
+      }
+    } catch (e) {
+      console.warn('Failed to evaluate feature flags for URL tab visibility', e);
+    }
   }
 
   attachEventListeners() {
@@ -490,44 +515,48 @@ class UIManager {
   }
 
   toggleCodeBlock() {
+    // Open a modal instead of appending inline for better UX and discoverability.
+    if (!this.currentPalette) return;
+    const html = this.getCodeBlockHTML(this.currentPalette);
+    if (window.PFModal && typeof window.PFModal.open === 'function') {
+      // Remember the trigger to restore focus handled inside modal implementation
+      this.lastShowCodeTrigger = this.elements.showCodeBtn;
+      window.PFModal.open(html);
+    } else {
+      // Fallback to inline display if modal not available
     this.codeBlockVisible = !this.codeBlockVisible;
     this.elements.paletteCodeBlock.style.display = this.codeBlockVisible ? 'block' : 'none';
     if (this.codeBlockVisible) this.renderCodeBlock();
+    }
   }
 
   renderCodeBlock() {
     if (!this.currentPalette) return;
+    this.elements.paletteCodeBlock.innerHTML = this.getCodeBlockHTML(this.currentPalette);
+  }
+
+  getCodeBlockHTML(palette) {
     const allColors = [
-      ...(Array.isArray(this.currentPalette.dominant) ? this.currentPalette.dominant : []),
-      ...(Array.isArray(this.currentPalette.secondary) ? this.currentPalette.secondary : []),
-      ...(Array.isArray(this.currentPalette.accent) ? this.currentPalette.accent : []),
-      ...(Array.isArray(this.currentPalette.all) ? this.currentPalette.all : [])
+      ...(Array.isArray(palette.dominant) ? palette.dominant : []),
+      ...(Array.isArray(palette.secondary) ? palette.secondary : []),
+      ...(Array.isArray(palette.accent) ? palette.accent : []),
+      ...(Array.isArray(palette.all) ? palette.all : [])
     ];
-    // CSS Variables
-    let cssVars = ':root {\n';
-    allColors.forEach((color, i) => {
-      cssVars += `  --color-palette-${i+1}: ${color.hex};\n`;
-    });
+    let cssVars = ':root\n{\n';
+    allColors.forEach((color, i) => { cssVars += `  --color-palette-${i+1}: ${color.hex};\n`; });
     cssVars += '}\n';
-    // SCSS
     let scssVars = '';
-    allColors.forEach((color, i) => {
-      scssVars += `$color-palette-${i+1}: ${color.hex};\n`;
-    });
-    // Tailwind config
+    allColors.forEach((color, i) => { scssVars += `$color-palette-${i+1}: ${color.hex};\n`; });
     let tailwind = 'module.exports = {\n  theme: {\n    extend: {\n      colors: {\n';
-    allColors.forEach((color, i) => {
-      tailwind += `        palette${i+1}: '${color.hex}',\n`;
-    });
+    allColors.forEach((color, i) => { tailwind += `        palette${i+1}: '${color.hex}',\n`; });
     tailwind += '      }\n    }\n  }\n}\n';
-    // JSON
-    let json = JSON.stringify(allColors.map(c => c.hex), null, 2);
-    // Render
-    this.elements.paletteCodeBlock.innerHTML =
+    const json = JSON.stringify(allColors.map(c => c.hex), null, 2);
+    return (
       `<div style="margin-bottom:0.7em;"><strong>CSS Variables</strong></div><pre><code>${cssVars}</code></pre>` +
       `<div style="margin-bottom:0.7em;"><strong>SCSS</strong></div><pre><code>${scssVars}</code></pre>` +
       `<div style="margin-bottom:0.7em;"><strong>Tailwind Config</strong></div><pre><code>${tailwind}</code></pre>` +
-      `<div style="margin-bottom:0.7em;"><strong>JSON</strong></div><pre><code>${json}</code></pre>`;
+      `<div style="margin-bottom:0.7em;"><strong>JSON</strong></div><pre><code>${json}</code></pre>`
+    );
   }
 
   async copyColor(color, swatchElement) {

@@ -84,6 +84,8 @@ class ColorPaletteExtractorApp {
         this.showFallbackError('UIManager failed: ' + (uiError && uiError.stack ? uiError.stack : uiError));
         return;
       }
+      // Setup external stylesheet fallbacks (e.g., Font Awesome)
+      this.setupStylesFallbacks();
       
       // Initialize service worker for PWA functionality (optional)
       this.initializeServiceWorker();
@@ -113,10 +115,55 @@ class ColorPaletteExtractorApp {
     }
   }
 
+  // Attempt to load Font Awesome CSS from alternate CDNs if the primary link fails
+  setupStylesFallbacks() {
+    try {
+      const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+      const faLink = links.find(l => (l.href && (l.href.includes('font-awesome') || l.href.includes('fontawesome'))));
+      if (!faLink) return;
+
+      const fallbacks = [
+        'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css',
+        'https://unpkg.com/@fortawesome/fontawesome-free@6.0.0/css/all.min.css'
+      ];
+
+      let tried = 0;
+      const tryNext = () => {
+        if (tried >= fallbacks.length) return;
+        const href = fallbacks[tried++];
+        const alt = document.createElement('link');
+        alt.rel = 'stylesheet';
+        alt.href = href;
+        alt.onload = () => {
+          console.log('Loaded Font Awesome from fallback:', href);
+        };
+        alt.onerror = tryNext; // try next fallback on error
+        document.head.appendChild(alt);
+      };
+
+      faLink.addEventListener('error', () => {
+        console.warn('Primary Font Awesome stylesheet failed to load. Trying fallbacks...');
+        tryNext();
+      }, { once: true });
+    } catch (e) {
+      // Non-fatal; continue app startup
+    }
+  }
+
   async initializeServiceWorker() {
     if ('serviceWorker' in navigator) {
       try {
-        const registration = await navigator.serviceWorker.register('/sw.js');
+        // Register service worker with a relative URL so subpath hosting works
+        const swUrl = (function() {
+          try {
+            // Compute relative path to sw.js based on current location
+            const base = new URL('.', window.location.href);
+            return new URL('sw.js', base).pathname;
+          } catch (e) {
+            return 'sw.js';
+          }
+        })();
+        const registration = await navigator.serviceWorker.register(swUrl);
         console.log('Service Worker registered:', registration);
         
         // Handle service worker updates

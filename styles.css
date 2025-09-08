@@ -1482,6 +1482,123 @@ html, body {
   margin-bottom: 2.5rem;
   overflow-x: auto;
 }
+
+/* --- MODAL (PF) --- */
+.pf-modal-root {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+}
+.pf-modal-root.pf-open { display: block; }
+.pf-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+.pf-modal-root.pf-open .pf-modal-overlay { opacity: 1; }
+.pf-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.98);
+  width: min(900px, 92vw);
+  max-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(31,38,135,0.2);
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+  opacity: 0;
+}
+.pf-modal-root.pf-open .pf-modal {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.pf-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border-primary);
+}
+.pf-modal-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+.pf-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.pf-modal-content {
+  padding: 1rem;
+  overflow: auto;
+}
+.pf-modal-content pre { margin: 0 0 1rem 0; }
+.pf-modal-content pre code {
+  display: block;
+  font-family: 'Fira Mono','Consolas','Menlo',monospace;
+  white-space: pre;
+  color: #e2e8f0;
+  background: #181c24;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+}
+.pf-modal-footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  padding: 0.9rem 1rem;
+  border-top: 1px solid var(--border-primary);
+}
+@media (max-width: 480px) {
+  .pf-modal { width: 94vw; }
+}
+/* --- END MODAL (PF) --- */
+
+/* --- MODAL COLOR TOKEN & TOOLTIP --- */
+.pf-color-token {
+  color: #4FC3F7;
+  cursor: pointer;
+  outline: none;
+}
+.pf-color-token:focus,
+.pf-color-token:hover {
+  text-decoration: underline;
+}
+.pf-color-tooltip {
+  position: fixed;
+  z-index: 10001;
+  background: var(--bg-glass);
+  border: 1.5px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 24px rgba(31,38,135,0.25);
+  padding: 0.85rem 1rem;
+  display: none;
+  pointer-events: none;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+}
+.pf-color-tooltip-swatch {
+  width: 72px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  margin-bottom: 0.6rem;
+}
+.pf-color-tooltip-text {
+  font-family: 'Fira Mono','Consolas','Menlo',monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+/* --- END MODAL COLOR TOKEN & TOOLTIP --- */
 @media (max-width: 900px) {
   .all-colors-container {
     padding: 1.2rem 0.5rem 1.5rem 0.5rem;

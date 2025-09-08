@@ -231,12 +231,24 @@ class ColorExtractor {
 
   // Production-level website color analysis with multiple strategies and retry logic
   async analyzeWebsiteColorsProduction(url) {
-    const strategies = [
-      () => this.extractWithHeadlessBrowserAPI(url),
-      () => this.extractWithServerSideRendering(url),
-      () => this.extractWithAdvancedCSSAnalysis(url),
-      () => this.extractWithMetaDataAnalysis(url)
-    ];
+    // Feature-flagged external strategies for production safety.
+    // When disabled, skip network-heavy endpoints and rely on metadata/heuristics
+    // to avoid flakiness in environments without backend support.
+    const cfg = window.AppConfig || {};
+    const externalEnabled = cfg.enableExternalUrlExtraction !== false;
+
+    const strategies = [];
+    if (externalEnabled && cfg.enableHeadlessProviders) {
+      strategies.push(() => this.extractWithHeadlessBrowserAPI(url));
+    }
+    if (externalEnabled && cfg.enableServerSideRenderingProviders) {
+      strategies.push(() => this.extractWithServerSideRendering(url));
+    }
+    if (externalEnabled && cfg.enableCORSProxies) {
+      strategies.push(() => this.extractWithAdvancedCSSAnalysis(url));
+    }
+    // Always include metadata/heuristics as the most stable, last-resort option
+    strategies.push(() => this.extractWithMetaDataAnalysis(url));
 
     let lastError = null;
     const maxRetries = 2;
@@ -298,54 +310,10 @@ class ColorExtractor {
 
   // Strategy 1: Use headless browser APIs (most reliable)
   async extractWithHeadlessBrowserAPI(url) {
-    const apis = [
-      {
-        name: 'browserless',
-        endpoint: 'https://chrome.browserless.io/screenshot',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache'
-        },
-        body: JSON.stringify({
-          url: url,
-          viewport: { width: 1280, height: 720 },
-          waitFor: 2000,
-          options: {
-            fullPage: false,
-            type: 'png',
-            quality: 80
-          }
-        })
-      },
-      {
-        name: 'puppeteer-api',
-        endpoint: 'https://api.puppeteer.dev/screenshot',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          url: url,
-          viewport: { width: 1280, height: 720 },
-          waitUntil: 'networkidle2',
-          timeout: 30000
-        })
-      },
-      {
-        name: 'playwright-api',
-        endpoint: 'https://api.playwright.dev/screenshot',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          url: url,
-          viewport: { width: 1280, height: 720 },
-          waitForLoadState: 'networkidle'
-        })
-      }
-    ];
+    const cfg = window.AppConfig || {};
+    const apis = Array.isArray(cfg.headlessProviders) && cfg.headlessProviders.length > 0
+      ? cfg.headlessProviders
+      : [];
 
     for (const api of apis) {
       try {
@@ -357,7 +325,7 @@ class ColorExtractor {
         const response = await fetch(api.endpoint, {
           method: api.method,
           headers: api.headers,
-          body: api.body,
+          body: typeof api.body === 'function' ? api.body(url) : api.body,
           signal: controller.signal
         });
 
@@ -384,36 +352,10 @@ class ColorExtractor {
 
   // Strategy 2: Server-side rendering with reliable proxies
   async extractWithServerSideRendering(url) {
-    const proxies = [
-      {
-        name: 'render-api',
-        endpoint: 'https://api.render.com/v1/services/screenshot',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer demo-token'
-        },
-        body: JSON.stringify({
-          url: url,
-          viewport: { width: 1280, height: 720 },
-          waitFor: 3000
-        })
-      },
-      {
-        name: 'vercel-api',
-        endpoint: 'https://api.vercel.com/v1/screenshot',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          url: url,
-          width: 1280,
-          height: 720,
-          wait: 3000
-        })
-      }
-    ];
+    const cfg = window.AppConfig || {};
+    const proxies = Array.isArray(cfg.ssrProviders) && cfg.ssrProviders.length > 0
+      ? cfg.ssrProviders
+      : [];
 
     for (const proxy of proxies) {
       try {
@@ -422,7 +364,7 @@ class ColorExtractor {
         const response = await fetch(proxy.endpoint, {
           method: proxy.method,
           headers: proxy.headers,
-          body: proxy.body
+          body: typeof proxy.body === 'function' ? proxy.body(url) : proxy.body
         });
 
         if (response.ok) {
