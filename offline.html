@@ -121,7 +121,7 @@
         
 
         
-        <button class="retry-button" onclick="window.location.reload()">
+        <button class="retry-button" id="retryButton">
             Try Again
         </button>
         
@@ -136,8 +136,8 @@
         
         // Show connection status
         if (navigator.onLine) {
-            // If we're actually online, redirect to main app
-            window.location.href = '/';
+            // If we're actually online, redirect to app entry relative to current path
+            window.location.href = './';
         }
         
         // Periodic connection check
@@ -146,6 +146,14 @@
                 window.location.reload();
             }
         }, 5000);
+
+        // Attach retry button behavior unobtrusively
+        (function(){
+            var btn = document.getElementById('retryButton');
+            if (btn) {
+                btn.addEventListener('click', function(){ window.location.reload(); });
+            }
+        })();
     </script>
 </body>
 </html> 

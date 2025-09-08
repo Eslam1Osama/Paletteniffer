@@ -11,6 +11,7 @@ const STATIC_FILES = [
   'platformPreloader.css',
   'css/platformNavigation.css',
   'js/utils.js',
+  'js/color-algorithms.js',
   'js/logger.js',
   'js/modal.js',
   'js/config.js',
@@ -18,6 +19,7 @@ const STATIC_FILES = [
   'js/ui-manager.js',
   'js/app.js',
   'js/platformNavigation.js',
+  'js/workers/imageWorker.js',
   'platformPreloader.js',
   'assets/logo_light.png',
   'assets/logo_dark.png',
@@ -84,6 +86,10 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
+  // Skip unsupported schemes to avoid errors
+  if (!/^https?:$/.test(url.protocol)) {
+    return;
+  }
   
   // Skip non-GET requests
   if (request.method !== 'GET') {

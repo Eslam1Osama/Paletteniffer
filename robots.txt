@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
-
-# Sitemap
-Sitemap: https://paletteniffer.vercel.app/sitemap.xml 
+Sitemap: https://paletteniffer.vercel.app/sitemap.xml

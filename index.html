@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paletteniffer - Enterprise Color Palette Extractor</title>
+    <title>Paletteniffer - Color Palette Extractor</title>
     <meta name="description" content="Enterprise-grade color palette extraction tool with advanced AI-powered analysis. Extract, analyze, and export color palettes from images and websites with professional accuracy and accessibility compliance.">
     <meta name="keywords" content="color palette, color extractor, design tools, web design, color analysis, accessibility, WCAG, color psychology, brand colors, design system, CSS variables, Tailwind, Adobe ASE">
     <meta name="author" content="Paletteniffer Pro">
@@ -15,7 +15,7 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://paletteniffer.vercel.app/">
-    <meta property="og:title" content="Paletteniffer - Enterprise Color Palette Extractor">
+    <meta property="og:title" content="Paletteniffer - Color Palette Extractor">
     <meta property="og:description" content="Extract, analyze, and export color palettes from images and websites with enterprise-level accuracy and accessibility compliance. Perfect for designers and developers.">
     <meta property="og:image" content="https://paletteniffer.vercel.app/assets/logo_light.png">
     <meta property="og:image:width" content="1200">
@@ -26,11 +26,14 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://paletteniffer.vercel.app/">
-    <meta property="twitter:title" content="Paletteniffer - Enterprise Color Palette Extractor">
+    <meta property="twitter:title" content="Paletteniffer - Color Palette Extractor">
     <meta property="twitter:description" content="Extract, analyze, and export color palettes from images and websites with enterprise-level accuracy and accessibility compliance.">
     <meta property="twitter:image" content="https://paletteniffer.vercel.app/assets/logo_light.png">
     <meta property="twitter:site" content="@paletteniffer">
     <meta property="twitter:creator" content="@paletteniffer">
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://paletteniffer.vercel.app/">
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -128,12 +131,12 @@
                 <div class="container">
                     <!-- Input Section -->
                     <div class="input-card">
-                        <div class="tabs">
-                            <button class="tab-btn active" data-tab="image">
+                        <div class="tabs" role="tablist" aria-label="Input Mode">
+                            <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="image-tab" id="tab-image" data-tab="image">
                                 <i class="fas fa-upload"></i>
                                 Upload Image
                             </button>
-                            <button class="tab-btn" data-tab="url">
+                            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="url-tab" id="tab-url" data-tab="url">
                                 <i class="fas fa-link"></i>
                                 Analyze Website
                             </button>
@@ -141,7 +144,7 @@
 
                         <div class="tab-content">
                             <!-- Image Upload Tab -->
-                            <div class="tab-pane active" id="image-tab">
+                            <div class="tab-pane active" id="image-tab" role="tabpanel" aria-labelledby="tab-image" tabindex="0">
                                 <div class="upload-area" id="uploadArea">
                                     <input type="file" id="fileInput" accept="image/*" hidden>
                                     <div class="upload-content">
@@ -153,7 +156,7 @@
                             </div>
 
                             <!-- URL Analysis Tab -->
-                            <div class="tab-pane" id="url-tab">
+                            <div class="tab-pane" id="url-tab" role="tabpanel" aria-labelledby="tab-url" tabindex="0" hidden>
                                 <div class="url-input-group">
                                     <input type="url" id="urlInput" placeholder="https://example.com" class="url-input">
                                     <button id="analyzeBtn" class="btn btn-primary">
@@ -261,6 +264,7 @@
     <script src="js/config.js"></script>
     <script src="js/logger.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/color-algorithms.js"></script>
     <script src="js/modal.js"></script>
     <script src="js/color-extractor.js"></script>
     <script src="js/ui-manager.js"></script>

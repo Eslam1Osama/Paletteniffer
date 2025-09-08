@@ -24,6 +24,11 @@ class ColorExtractor {
     
     // Initialize performance monitoring
     this.initializePerformanceMonitoring();
+
+    // Lazy-initialized image worker for off-main-thread analysis
+    this.imageWorker = null;
+    this.workerRequestId = 0;
+    this.pendingWorkerResolvers = new Map();
   }
 
   // Initialize performance monitoring
@@ -88,17 +93,25 @@ class ColorExtractor {
         try {
           // Resize image for performance
           Utils.resizeImage(this.canvas, this.ctx, img, 800);
-          
-          // Extract colors using k-means clustering (increase k for pixel-level detail)
-          const colors = this.performKMeansColorExtraction(32); // was default (8), now 32 for deep detail
-          
-          // Categorize colors
-          const palette = this.categorizeColors(colors);
-          // Add all extracted colors for deep detail
-          palette.all = colors;
-          
-          URL.revokeObjectURL(img.src);
-          resolve(palette);
+
+          // Offload to Web Worker when available; fallback to main-thread extraction
+          const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+
+          this.analyzeImageDataWithWorker(imageData, { k: 32 })
+            .then(colors => {
+              const palette = this.categorizeColors(colors);
+              palette.all = colors;
+              URL.revokeObjectURL(img.src);
+              resolve(palette);
+            })
+            .catch(() => {
+              // Fallback path preserves existing behavior
+              const colors = this.performKMeansColorExtraction(32);
+              const palette = this.categorizeColors(colors);
+              palette.all = colors;
+              URL.revokeObjectURL(img.src);
+              resolve(palette);
+            });
         } catch (error) {
           URL.revokeObjectURL(img.src);
           reject(Utils.createError(`Failed to extract colors: ${error.message}`, 'ImageProcessingError'));
@@ -120,6 +133,65 @@ class ColorExtractor {
       
       reader.readAsDataURL(imageFile);
     });
+  }
+
+  // Analyze ImageData via Web Worker with transferable ArrayBuffer
+  analyzeImageDataWithWorker(imageData, options = {}) {
+    try {
+      this.initImageWorker();
+    } catch (e) {
+      return Promise.reject(e);
+    }
+
+    return new Promise((resolve, reject) => {
+      const id = ++this.workerRequestId;
+      const transfer = imageData.data.buffer;
+      this.pendingWorkerResolvers.set(id, { resolve, reject });
+
+      try {
+        this.imageWorker.postMessage({
+          id,
+          width: imageData.width,
+          height: imageData.height,
+          buffer: transfer,
+          k: typeof options.k === 'number' ? options.k : 32,
+          alphaThreshold: 128,
+          sampleStep: 16
+        }, [transfer]);
+      } catch (err) {
+        this.pendingWorkerResolvers.delete(id);
+        reject(err);
+      }
+    });
+  }
+
+  initImageWorker() {
+    if (this.imageWorker) return;
+    // Subpath-safe worker URL
+    let workerUrl = 'js/workers/imageWorker.js';
+    try {
+      const base = new URL('.', window.location.href);
+      workerUrl = new URL('js/workers/imageWorker.js', base).toString();
+    } catch (e) {}
+
+    const worker = new Worker(workerUrl);
+    worker.onmessage = (e) => {
+      const msg = e.data || {};
+      const entry = this.pendingWorkerResolvers.get(msg.id);
+      if (!entry) return;
+      this.pendingWorkerResolvers.delete(msg.id);
+      if (msg.ok) {
+        entry.resolve(Array.isArray(msg.colors) ? msg.colors : []);
+      } else {
+        entry.reject(new Error(msg.error || 'Worker error'));
+      }
+    };
+    worker.onerror = () => {
+      // Reject all pending requests on worker error
+      this.pendingWorkerResolvers.forEach(({ reject }) => reject(new Error('Image worker error')));
+      this.pendingWorkerResolvers.clear();
+    };
+    this.imageWorker = worker;
   }
 
   // Extract colors from a webpage URL - Production Level Implementation
@@ -1436,13 +1508,21 @@ class ColorExtractor {
           canvas.height = img.height * ratio;
 
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          
+
           const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const colors = this.extractColorsFromImageData(imageData);
-          const palette = this.categorizeColors(colors);
-          
-          URL.revokeObjectURL(img.src);
-          resolve(palette);
+          this.analyzeImageDataWithWorker(imageData, { k: 32 })
+            .then(colors => {
+              const palette = this.categorizeColors(colors);
+              URL.revokeObjectURL(img.src);
+              resolve(palette);
+            })
+            .catch(() => {
+              // Fallback on main thread if worker fails
+              const colors = this.extractColorsFromImageData(imageData);
+              const palette = this.categorizeColors(colors);
+              URL.revokeObjectURL(img.src);
+              resolve(palette);
+            });
         } catch (error) {
           URL.revokeObjectURL(img.src);
           reject(error);

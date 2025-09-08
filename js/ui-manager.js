@@ -27,6 +27,11 @@ class UIManager {
       tabBtns: document.querySelectorAll('.tab-btn'),
       tabPanes: document.querySelectorAll('.tab-pane'),
       
+      // Branding (logo/title) for reload behavior
+      logoContainer: document.querySelector('.logo'),
+      logoTitle: document.querySelector('.app-title'),
+      logoImgs: document.querySelectorAll('.logo-img'),
+      
       // Image upload
       uploadArea: document.getElementById('uploadArea'),
       fileInput: document.getElementById('fileInput'),
@@ -125,10 +130,52 @@ class UIManager {
       });
     }
     
-    // Tab switching
+    // Tab switching and keyboard a11y
     this.elements.tabBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+      btn.addEventListener('click', (e) => this.switchTab(e.currentTarget.dataset.tab));
+      btn.addEventListener('keydown', (e) => {
+        const tabs = Array.from(this.elements.tabBtns);
+        const idx = tabs.indexOf(e.currentTarget);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          const next = tabs[(idx + 1) % tabs.length];
+          next.focus();
+          e.preventDefault();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          const prev = tabs[(idx - 1 + tabs.length) % tabs.length];
+          prev.focus();
+          e.preventDefault();
+        } else if (e.key === 'Home') {
+          tabs[0].focus();
+          e.preventDefault();
+        } else if (e.key === 'End') {
+          tabs[tabs.length - 1].focus();
+          e.preventDefault();
+        } else if (e.key === 'Enter' || e.key === ' ') {
+          this.switchTab(e.currentTarget.dataset.tab);
+          e.preventDefault();
+        }
+      });
     });
+
+    // Brand logo/title: reload app on click/Enter/Space (subpath-safe)
+    const bindReload = (el) => {
+      if (!el) return;
+      el.setAttribute('role', 'link');
+      el.setAttribute('tabindex', '0');
+      el.setAttribute('aria-label', 'Reload Paletteniffer');
+      el.addEventListener('click', () => this.reloadApp());
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.reloadApp();
+        }
+      });
+    };
+    bindReload(this.elements.logoContainer);
+    bindReload(this.elements.logoTitle);
+    if (this.elements.logoImgs && this.elements.logoImgs.forEach) {
+      this.elements.logoImgs.forEach(img => bindReload(img));
+    }
     
     // Image upload
     this.elements.uploadArea.addEventListener('click', () => this.elements.fileInput.click());
@@ -238,14 +285,23 @@ class UIManager {
   }
 
   switchTab(tabName) {
-    // Update tab buttons
+    // Update tab buttons (role=tab) and selection state
     this.elements.tabBtns.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.tab === tabName);
+      const isActive = btn.dataset.tab === tabName;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      btn.setAttribute('tabindex', isActive ? '0' : '-1');
     });
     
-    // Update tab panes
+    // Update tab panels (role=tabpanel)
     this.elements.tabPanes.forEach(pane => {
-      pane.classList.toggle('active', pane.id === `${tabName}-tab`);
+      const isActive = pane.id === `${tabName}-tab`;
+      pane.classList.toggle('active', isActive);
+      if (isActive) {
+        pane.removeAttribute('hidden');
+      } else {
+        pane.setAttribute('hidden', '');
+      }
     });
   }
 
@@ -527,6 +583,15 @@ class UIManager {
     this.codeBlockVisible = !this.codeBlockVisible;
     this.elements.paletteCodeBlock.style.display = this.codeBlockVisible ? 'block' : 'none';
     if (this.codeBlockVisible) this.renderCodeBlock();
+    }
+  }
+
+  // Reload the application to its entry point using a relative path for subpath hosting
+  reloadApp() {
+    try {
+      window.location.href = './';
+    } catch (e) {
+      window.location.reload();
     }
   }
 
