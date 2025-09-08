@@ -1,164 +1,142 @@
-# Paletteniffer
+# Paletteniffer – Color Palette Extractor (1.2 Version)
 
-> **Enterprise-Grade Color Palette Extractor with Advanced AI-Powered Analysis**
+> Production-grade color analysis and export for design and engineering teams.
 
-[![License: Proprietary](https://img.shields.io/badge/license-Proprietary-red.svg)](#license)
+[![License: Commercial](https://img.shields.io/badge/license-Commercial-orange.svg)](#license)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://paletteniffer.vercel.app/)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://paletteniffer.vercel.app/)
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-brightgreen.svg)](https://web.dev/progressive-web-apps/)
 [![WCAG AA](https://img.shields.io/badge/WCAG-AA%20Compliant-green.svg)](https://www.w3.org/WAI/WCAG2AA-Conformance)
 
-A sophisticated, production-ready color palette extraction tool designed for professional designers, developers, and creative teams. Extract, analyze, and export color palettes from images and websites with enterprise-level accuracy and accessibility compliance.
+Paletteniffer is a professional-grade color palette extractor. It analyzes images and (optionally) websites to derive brand-ready palettes with accessibility insights and developer exports. This edition is delivered commercially by EasOfTopia.
 
-## ✨ **Key Features**
+## Contents
+- Overview
+- Features
+- Architecture
+- Getting started
+- Configuration (feature flags)
+- PWA and offline
+- Accessibility (A11y)
+- Security and hardening
+- Performance guidance
+- Deployment
+- Troubleshooting
+- Roadmap
+- Versioning
+- License and ownership
+- Support & contact
 
-### 🖼️ **Advanced Image Analysis**
-- **K-Means Clustering Algorithm** for precise color extraction
-- **Multi-format Support**: PNG, JPG, WebP
-- **High-Resolution Processing** with intelligent image optimization
-- **Real-time Preview** with instant color categorization
+## Overview
+Paletteniffer provides:
+- Accurate, fast color extraction from images (Web Worker accelerated)
+- Optional website analysis via multiple strategies (feature-gated)
+- A11y scoring and developer-friendly exports (CSS/SCSS/Tailwind/JSON/ASE)
+- PWA installability, offline fallback, and subpath-safe hosting
 
-### 🌐 **Website Color Extraction**
-- **Multi-Strategy Approach** with intelligent fallbacks
-- **CORS-Compliant** extraction methods
-- **Headless Browser Integration** for complex websites
-- **Meta-Data Analysis** for brand color detection
+## Features
+- Image analysis
+  - K-means clustering with adaptive sampling
+  - Off-main-thread processing via Web Worker
+  - Large image handling with optimized canvas reads
+- Website analysis (feature-gated)
+  - Multi-strategy with CORS-proxy and metadata fallbacks
+  - Retries, exponential backoff, and safe defaults
+- Professional exports
+  - CSS variables, SCSS variables, Tailwind config, JSON, Adobe ASE
+- Accessibility & UX
+  - WCAG contrast metrics and guidance
+  - Accessible tabs, modals, keyboard navigation, and focus management
+- PWA
+  - Offline support, installable manifest, resilient service worker
 
-### 🎯 **Professional Color Analysis**
-- **WCAG 2.1 Accessibility Compliance** with AA/AAA ratings
-- **Color Psychology Analysis** for brand alignment
-- **Industry-Specific Recommendations** based on domain analysis
-- **Color Harmony Detection** (complementary, analogous, triadic)
-
-### 📤 **Enterprise Export Formats**
-- **JSON** - Structured data for API integration
-- **CSS Variables** - Ready-to-use CSS custom properties
-- **SCSS** - Sass/SCSS variable definitions
-- **Tailwind Config** - Tailwind CSS configuration
-- **SVG/PNG** - Visual palette representations
-- **Adobe ASE** - Professional design software compatibility
-
-### ♿ **Accessibility & UX**
-- **WCAG 2.1 AA Compliant** interface design
-- **Keyboard Navigation** support
-- **Screen Reader** compatibility
-- **High Contrast Mode** support
-- **Reduced Motion** preferences
-
-### 📱 **Progressive Web App (PWA)**
-- **Installable** on mobile and desktop devices
-- **Offline Functionality** with intelligent caching
-- **App Shortcuts** for quick access to features
-- **Background Sync** for seamless updates
-- **Push Notifications** for app updates
-
-
-## 🏗️ **Architecture**
-
-### **Core Components**
-
+## Architecture
 ```
 paletteniffer/
-├── index.html              # Main application entry point
-├── styles.css              # Comprehensive styling system
-├── manifest.json           # PWA manifest for installable app
-├── sw.js                   # Service worker for offline functionality
-├── offline.html            # Offline fallback page
-├── robots.txt              # SEO optimization
-├── sitemap.xml             # Search engine sitemap
-├── browserconfig.xml       # Microsoft Edge/IE compatibility
+├── index.html
+├── styles.css
+├── manifest.json
+├── sw.js
+├── offline.html
+├── robots.txt
+├── sitemap.xml
+├── browserconfig.xml
 ├── js/
-│   ├── app.js              # Application initialization & lifecycle
-│   ├── ui-manager.js       # UI state management & interactions
-│   ├── color-extractor.js  # Core color extraction algorithms
-│   └── utils.js            # Utility functions & helpers
-├── assets/
-│   ├── logo_light.png      # Light theme logo
-│   └── logo_dark.png       # Dark theme logo
-└── README.md               # This file
+│   ├── app.js                # App bootstrap, SW reg, fallbacks, a11y setup
+│   ├── ui-manager.js         # UI state, interactions, a11y tab semantics
+│   ├── color-extractor.js    # Orchestration (fetch, analysis, exports)
+│   ├── color-algorithms.js   # Shared k-means & sampling (main + worker)
+│   ├── workers/
+│   │   └── imageWorker.js    # Off-main-thread image analysis
+│   ├── modal.js              # Accessible modal component
+│   ├── utils.js              # Math, color utils, clipboard, helpers
+│   ├── config.js             # Feature flags and providers
+│   ├── logger.js             # Environment-driven logging suppression
+│   └── platformNavigation.js # Optional platform navigation integration
+└── assets/
+    ├── logo_light.png
+    └── logo_dark.png
 ```
 
-### **Technology Stack**
+## PWA and offline
+- `manifest.json`: subpath-safe (`start_url`/`scope` = "."), correct icons, theme colors
+- `sw.js`: cache-first for static assets, dynamic cache for same-origin, guards for non-http(s)/extensions; offline fallback `offline.html`
 
-- **Vanilla JavaScript** - No framework dependencies
-- **Modern CSS** - CSS Grid, Flexbox, Custom Properties
-- **Canvas API** - Image processing & color analysis
-- **Web APIs** - File API, Fetch API, Clipboard API
-- **Service Worker** - Offline functionality & caching
-- **PWA Manifest** - Installable app experience
-- **Progressive Web App** - Offline-capable, installable
+## Accessibility (A11y)
+- Tabs: `role=tablist/tab/tabpanel`, keyboard navigation (Arrow/Home/End)
+- Modal: focus trap, Esc/overlay dismiss, copy controls
+- Tooltips: keyboard focusable; tokens sized for readability
 
-## 🎨 **Usage Examples**
+## Security and hardening
+- Prefer self-hosted icon sets or add SRI when loading from CDNs
+- Recommended CSP (example):
+```
+Content-Security-Policy:
+  default-src 'self';
+  img-src 'self' data: https:; 
+  style-src 'self' https: 'unsafe-inline';
+  script-src 'self';
+  connect-src 'self' https:; 
+  worker-src 'self';
+```
+- Service worker skips non-http(s) schemes and extension URLs
+- URL analysis strategies are gated; expect CORS constraints on public sites
 
-### **Image Upload**
-1. Click "Upload Image" tab
-2. Drag & drop or click to select an image
-3. View extracted colors categorized by dominance
-4. Copy individual colors or export entire palette
+## Performance guidance
+- Web Worker handles image clustering off the main thread
+- Canvas contexts use `willReadFrequently` for efficient readbacks
+- For very large images, prefer downscaling before analysis
+- Optional: move heavy HTML parsing to a worker for extreme pages
 
-### **Website Analysis**
-1. Click "Analyze Website" tab
-2. Enter website URL (e.g., `https://example.com`)
-3. View extracted brand colors and design patterns
-4. Export for development integration
+## Troubleshooting
+- URL analysis fails with CORS errors
+  - Disable headless/SSR providers or proxy through a backend you control
+- SW not updating
+  - Bump cache names in `sw.js` and hard refresh (Shift+Reload)
+- Console noise
+  - Adjust `js/config.js` logging flags; service worker console is suppressed by default
 
+## Roadmap
+- Workerization of HTML/CSS parsing
+- 512×512 icon variants and PWA shortcuts
+- CSP/SRI presets and optional reporting integration
+- Unit tests for algorithms, E2E smoke flows, CI pipeline
 
-## 🎯 **Performance Metrics**
+## Versioning
+- Semantic Versioning. Current version: `1.0.0`.
 
-- **Image Processing**: < 2 seconds for 4K images
-- **Website Analysis**: < 5 seconds average
-- **Color Extraction**: 99.8% accuracy rate
-- **Memory Usage**: < 50MB peak
-- **Bundle Size**: < 200KB gzipped
-- **PWA Score**: 95+ (Lighthouse)
-- **Offline Support**: Full functionality
-- **Install Time**: < 1 second
+## License and ownership
+This software is commercially licensed by **EasOfTopia**. All rights reserved.
 
-## 🔒 **Security & Privacy**
+- Unauthorized use, copying, modification, distribution, or sale is prohibited.
+- For licensing inquiries, enterprise distribution, and OEM/white-label, contact EOPeak.
 
-- **Client-Side Processing** - No data sent to external servers
-- **CORS-Compliant** - Respects website security policies
-- **No Analytics** - Zero tracking or data collection
-- **Open Source** - Transparent codebase for security review
+## Support & contact
+- Brand: **EasOfTopia**
+- Maintainer: **Eng/Dev/Design/CEO: Eslam Osama Saad**
+- Live demo: `https://paletteniffer.vercel.app/`
+- Email: eo6014501@gmail.com 
+- Phone Number: +201555489089
 
-## 🌟 **Enterprise Features**
-
-### **Professional Integration**
-- **REST API Ready** - Structured JSON responses
-- **Design System Compatible** - Export to major design tools
-- **Version Control Friendly** - Git-optimized file formats
-- **CI/CD Ready** - Automated deployment workflows
-- **PWA Deployment** - Ready for app stores
-
-### **Team Collaboration**
-- **Shared Palettes** - Export/import functionality
-- **Brand Guidelines** - Industry-specific recommendations
-- **Accessibility Reports** - WCAG compliance documentation
-- **Design Tokens** - Ready for design systems
-- **Offline Collaboration** - Work without internet connection
-
-## 🚫 License
-
-This code is licensed under a **Proprietary License**.
-
-- **All rights reserved** by **EasOfTopia Technologies**.
-- You are **not permitted** to use, copy, modify, distribute, or sell any part of this project.
-- This repository is intended for internal/company use only.
-
-## 🏢 Ownership
-
-This software is the exclusive property of **EasOfTopia Technologies**.  
-Any attempt to reverse-engineer, reuse, or distribute the contents of this repository without prior written consent is strictly prohibited and may result in legal action.
-
-
-## 🙏 **Acknowledgments**
-
-- **Color Theory** - Based on established color science principles
-- **WCAG Guidelines** - Accessibility compliance standards
-- **Open Source Community** - For inspiration and collaboration
-- **Design Community** - For feedback and feature requests
----
-
-**Built with ❤️ by the EasOfTopia (Paletteniffer) Team**
-
-*Paletteniffer - Where Colors Come to Life* 
+## Acknowledgments
+- Color science and WCAG guidance
+- Web standards and PWA community
