@@ -1,4 +1,4 @@
-# 🎨 Paletteniffer Pro
+# Paletteniffer Pro
 ## Enterprise Color Palette Extraction Platform
 
 <div align="center">
@@ -438,4 +438,5 @@ To deliver exceptional digital solutions that empower businesses and enhance use
 [![Eng. Eslam Osama Saad](https://img.shields.io/badge/Developer-Eng.%20Eslam%20Osama%20Saad-green.svg)](eo6014501@gmail.com)
 
 </div>
+
 
