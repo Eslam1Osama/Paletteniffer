@@ -407,13 +407,6 @@ For licensing inquiries, enterprise distribution, and OEM/white-label opportunit
 - **UI/UX Design**: User-centered design and accessibility compliance
 - **Enterprise Solutions**: Scalable, secure, and maintainable applications
 
-### **Leadership**
-**Eng. Eslam Osama Saad** - Founder, CEO & Lead Developer
-- **Experience**: 15+ years in web development and design
-- **Specialization**: Enterprise web applications and accessibility
-- **Education**: Engineering degree with focus on software development
-- **Certifications**: Web accessibility, performance optimization, and security
-
 ### **Our Mission**
 To deliver exceptional digital solutions that empower businesses and enhance user experiences through innovative technology and meticulous attention to detail.
 
@@ -437,7 +430,7 @@ To deliver exceptional digital solutions that empower businesses and enhance use
 
 <div align="center">
 
-**© 2024 EsOfTopia. All rights reserved.**
+**© 2025 EsOfTopia. All rights reserved.**
 
 *Professional Web Development & Design Solutions*
 
@@ -445,3 +438,4 @@ To deliver exceptional digital solutions that empower businesses and enhance use
 [![Eng. Eslam Osama Saad](https://img.shields.io/badge/Developer-Eng.%20Eslam%20Osama%20Saad-green.svg)](eo6014501@gmail.com)
 
 </div>
+
