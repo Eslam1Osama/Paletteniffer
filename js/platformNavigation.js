@@ -16,6 +16,10 @@ class PlatformNavigationManager {
                 url: 'https://topia-styler.vercel.app/'
             },
             {
+                name: 'Palettinum',
+                url: 'https://palettinum.vercel.app/'
+            },
+            {
                 name: 'Paletteniffer',
                 url: window.location.origin,
                 isCurrent: true

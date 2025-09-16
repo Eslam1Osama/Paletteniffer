@@ -157,7 +157,8 @@ class UIManager {
       });
     });
 
-    // Brand logo/title: reload app on click/Enter/Space (subpath-safe)
+    // Brand logo: reload app on click/Enter/Space (subpath-safe)
+    // Note: Only logo images have reload functionality, not the text or container
     const bindReload = (el) => {
       if (!el) return;
       el.setAttribute('role', 'link');
@@ -171,8 +172,7 @@ class UIManager {
         }
       });
     };
-    bindReload(this.elements.logoContainer);
-    bindReload(this.elements.logoTitle);
+    // Only bind reload to logo images, not the container or text
     if (this.elements.logoImgs && this.elements.logoImgs.forEach) {
       this.elements.logoImgs.forEach(img => bindReload(img));
     }
@@ -214,7 +214,8 @@ class UIManager {
   }
 
   initializeTheme() {
-    let savedTheme = localStorage.getItem('theme');
+    // Use stored theme from preloader if available, otherwise read from localStorage
+    let savedTheme = window._storedTheme || localStorage.getItem('theme');
     try { savedTheme = JSON.parse(savedTheme); } catch (e) {}
     if (!savedTheme) savedTheme = 'light';
     this.setTheme(savedTheme);
@@ -255,25 +256,19 @@ class UIManager {
       console.warn('Failed to save theme to localStorage:', e);
     }
     
-    // Sync preloader if visible
-    if (document.getElementById('platform-preloader')) {
-      if (theme === 'dark') {
-        document.body.classList.add('dark-mode');
-      } else {
-        document.body.classList.remove('dark-mode');
-      }
-    }
+    // Note: Preloader always stays in light mode, no need to sync theme
     
-    // Update custom SVG icons with cross-fade effect
+    // Update custom SVG icons with synchronized timing
     const sunIcon = this.elements.themeToggle.querySelector('.theme-icon-sun');
     const moonIcon = this.elements.themeToggle.querySelector('.theme-icon-moon');
     
+    // Synchronize icon switching with theme transition timing
     if (theme === 'light') {
-      // Fade out sun, fade in moon
+      // Show moon icon for light theme (sun is hidden)
       sunIcon.classList.remove('active');
       moonIcon.classList.add('active');
     } else {
-      // Fade out moon, fade in sun
+      // Show sun icon for dark theme (moon is hidden)
       moonIcon.classList.remove('active');
       sunIcon.classList.add('active');
     }

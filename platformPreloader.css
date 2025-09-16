@@ -97,7 +97,8 @@
   --preloader-bg: #fff;
   --preloader-accent: #38bdf8;
 }
-.dark-mode {
+/* Preloader always uses light mode - dark mode override removed */
+/* .dark-mode {
   --preloader-bg: #1e293b;
   --preloader-accent: #38bdf8;
-} 
+} */ 

@@ -195,6 +195,7 @@ html, body {
   transition: transform 0.18s;
   /* Visually zoom in the logo image */
   transform: scale(1.1);
+  cursor: pointer;
 }
 .logo-img-light {
   display: block;
@@ -315,11 +316,12 @@ html, body {
   top: 0;
   left: 0;
   opacity: 0;
-  transition: opacity 0.6s ease-in-out;
+  visibility: hidden;
 }
 
 .theme-icon.active {
   opacity: 1;
+  visibility: visible;
 }
 
 .theme-icon svg {
@@ -329,7 +331,6 @@ html, body {
   stroke-width: 1.5;
   fill: none;
   filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
-  transition: all 0.6s ease-in-out;
 }
 
 /* Remove focus outline from theme toggle button */
@@ -349,6 +350,11 @@ html, body {
   stroke: #FFD700;
   fill: none;
   filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.7));
+}
+
+/* Remove focus outline from logo images */
+.logo-img:focus-visible {
+  outline: none;
 }
 
 /* Main Content */
